@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "560020423608",
+    "project_id": "safety-syncc",
+    "storage_bucket": "safety-syncc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:560020423608:android:3e29a45a1d7a2e7449454d",
+        "android_client_info": {
+          "package_name": "com.example.safety_syncc"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGd4BE6FhLKjskLAa2wMJTcKEly9Kxx48"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
