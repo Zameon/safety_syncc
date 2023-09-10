@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:safety_syncc/screens/reset_password.dart';
 import 'package:safety_syncc/screens/signup_screen.dart';
+import 'package:safety_syncc/screens/location.dart';
 import 'package:flutter/animation.dart';
 import '../reusable_widgets/reusable_widget_signin.dart';
 import '../utils/colors_utils.dart';
@@ -136,7 +137,7 @@ class _SignInScreenState extends State<SignInScreen>
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => HomeScreen(),
+                                builder: (context) => LocationScreen(),
                               ),
                             );
                           }
