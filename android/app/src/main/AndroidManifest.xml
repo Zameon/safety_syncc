@@ -3,6 +3,10 @@
         android:label="safety_syncc"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAGd4BE6FhLKjskLAa2wMJTcKEly9Kxx48"/>
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
