@@ -94,7 +94,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 const SizedBox(
                   height: 20,
                 ),
-                firebaseUIButton(context, "Send OTP", () async {
+                firebaseUIButton(context, "Sign In", () async {
                   setState(() {
                     _errorText = null;
                   });

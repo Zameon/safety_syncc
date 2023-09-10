@@ -43,7 +43,7 @@ class _ResetPasswordState extends State<ResetPassword> {
       child: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        color: Colors.black.withOpacity(0.2),
+       // color: Colors.black.withOpacity(0.2),
 
         child: SingleChildScrollView(
           child: Padding(

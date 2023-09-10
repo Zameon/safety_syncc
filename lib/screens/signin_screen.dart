@@ -68,7 +68,7 @@ class _SignInScreenState extends State<SignInScreen>
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          color: Colors.black.withOpacity(0.2), // Add a semi-transparent black overlay
+        //  color: Colors.black.withOpacity(0.2), // Add a semi-transparent black overlay
           child: FadeTransition(
             opacity: _fadeAnimation,
             child: SingleChildScrollView(
@@ -91,7 +91,7 @@ class _SignInScreenState extends State<SignInScreen>
                       height: 20,
                     ),
                     reusableTextField(
-                      "Enter Username",
+                      "Enter Email",
                       Icons.person_outline,
                       false,
                       _emailTextController,
