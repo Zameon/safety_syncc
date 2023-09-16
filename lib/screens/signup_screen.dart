@@ -1,10 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:safety_syncc/screens/signin_screen.dart';
 
 import '../reusable_widgets/reusable_widget_signup.dart';
-import '../utils/colors_utils.dart';
-import '../screens/home_screen.dart';
+
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -122,7 +122,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         .createUserWithEmailAndPassword(
                       email: email,
                       password: password,
-                    );
+                    ).then((value) {
+                      FirebaseFirestore.instance.collection('UserData').doc(value.user?.uid).set(
+                        {
+                          "email": value.user?.email,
+                          "phone_no": phoneNumber,
+                          "username": _userNameTextController.text
+                        });
+                    });
 
                     if (userCredential.user == null) {
                       setState(() {

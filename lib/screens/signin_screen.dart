@@ -1,3 +1,4 @@
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:safety_syncc/screens/reset_password.dart';
@@ -23,7 +24,7 @@ class _SignInScreenState extends State<SignInScreen>
   late AnimationController _animationController; // Animation controller
   late Animation<double> _fadeAnimation; // Fade-in animation
   late Animation<Offset> _slideAnimation; // Slide-in animation
-
+  //final currUser = FirebaseAuth.instance.currentUser;
   @override
   void initState() {
     super.initState();
