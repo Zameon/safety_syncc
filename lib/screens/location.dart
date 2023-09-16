@@ -31,7 +31,7 @@ class _LocationScreenState extends State<LocationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('live location tracker'),
+        title: Text('Live Location Tracker'),
       ),
       body: Column(
         children: [
@@ -39,17 +39,17 @@ class _LocationScreenState extends State<LocationScreen> {
               onPressed: () {
                 _getLocation();
                 },
-              child: Text('add my location')),
+              child: Text('Add My Location')),
           TextButton(
               onPressed: () {
                 _listenLocation();
               },
-              child: Text('enable live location')),
+              child: Text('Enable Live Location')),
           TextButton(
               onPressed: () {
                 _stopListening();
               },
-              child: Text('stop live location')),
+              child: Text('Stop Live Location')),
           Expanded(
               child: StreamBuilder(
             stream:
@@ -96,9 +96,9 @@ class _LocationScreenState extends State<LocationScreen> {
     try {
       final loc.LocationData _locationResult = await location.getLocation();
       await FirebaseFirestore.instance.collection('location').doc('user1').set({
-        'latitude': _locationResult.latitude,
-        'longitude': _locationResult.longitude,
-        'name': 'john'
+        'latitude': '--',
+        'longitude': '--',
+        'name': 'Ramisa'
       }, SetOptions(merge: true));
     } catch (e) {
       print(e);
@@ -131,7 +131,7 @@ class _LocationScreenState extends State<LocationScreen> {
       await FirebaseFirestore.instance.collection('location').doc('user1').set({
         'latitude': currentlocation.latitude,
         'longitude': currentlocation.longitude,
-        'name': 'john'
+        'name': 'Ramisa'
       }, SetOptions(merge: true));
     });
   }
