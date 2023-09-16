@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import '../screens/mymap.dart';
@@ -15,9 +16,12 @@ class LocationScreen extends StatefulWidget {
 
 class _LocationScreenState extends State<LocationScreen> {
   final loc.Location location = loc.Location();
-  late double lat;
-  late double long;
+  late String? lat;
+  late String? long;
+  late String? name;
   StreamSubscription<loc.LocationData>? _locationSubscription;
+  final usr = FirebaseAuth.instance.currentUser;
+  CollectionReference collectionReference = FirebaseFirestore.instance.collection('UserData');
 
   @override
   void initState() {
@@ -93,32 +97,28 @@ class _LocationScreenState extends State<LocationScreen> {
   }
 
   _getLocation() async {
+    getUsersData();
+    print(name);
     try {
       final loc.LocationData _locationResult = await location.getLocation();
-      await FirebaseFirestore.instance.collection('location').doc('user1').set({
+      await FirebaseFirestore.instance.collection('location').doc(usr!.uid).set({
         'latitude': '--',
         'longitude': '--',
-        'name': 'Ramisa'
+        'name': name
       }, SetOptions(merge: true));
     } catch (e) {
       print(e);
     }
   }
 
-  /*_getLocation() async {
-    try {
-      //Future<Position> pos = _requestPermission();
-      //final Future<Position> value;
-      //final loc.LocationData _locationResult = await location.getLocation();
-      await FirebaseFirestore.instance.collection('location').doc('user1').set({
-        'latitude': 'lat',
-        'longitude': 'lat',
-        'name': 'john'
-      }, SetOptions(merge: true));
-    } catch (e) {
-      print(e);
-    }
-  }*/
+  void getUsersData() {
+    collectionReference.doc(usr!.uid).get().then((value) {
+      setState(() {
+        name =  value['username'];
+      });
+    });
+  }
+
 
   Future<void> _listenLocation() async {
     _locationSubscription = location.onLocationChanged.handleError((onError) {
@@ -128,10 +128,10 @@ class _LocationScreenState extends State<LocationScreen> {
         _locationSubscription = null;
       });
     }).listen((loc.LocationData currentlocation) async {
-      await FirebaseFirestore.instance.collection('location').doc('user1').set({
+      await FirebaseFirestore.instance.collection('location').doc(usr!.uid).set({
         'latitude': currentlocation.latitude,
         'longitude': currentlocation.longitude,
-        'name': 'Ramisa'
+        'name': name
       }, SetOptions(merge: true));
     });
   }
@@ -154,27 +154,5 @@ class _LocationScreenState extends State<LocationScreen> {
     }
   }
 
-  /*Future<void> _requestPermission() async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if(!serviceEnabled)
-      {
-        return Future.error('Location services are disabled');
-      }
 
-    LocationPermission permission = await Geolocator.checkPermission();
-    if(permission == LocationPermission.denied)
-      {
-        permission = await Geolocator.requestPermission();
-        if(permission == LocationPermission.denied)
-          {
-            return Future.error('Location permissions are denied');
-          }
-      }
-    if(permission == LocationPermission.deniedForever)
-      {
-        return Future.error('Location Permission Denied Forever');
-      }
-
-    return await Geolocator.getCurrentPosition();
-  }*/
 }
