@@ -7,7 +7,7 @@ import 'package:safety_syncc/screens/location.dart';
 import 'package:flutter/animation.dart';
 import '../reusable_widgets/reusable_widget_signin.dart';
 import '../utils/colors_utils.dart';
-import 'home_screen.dart';
+import 'MyHomePage.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({Key? key}) : super(key: key);
@@ -138,7 +138,7 @@ class _SignInScreenState extends State<SignInScreen>
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => LocationScreen(),
+                                builder: (context) => MyHomePage(),
                               ),
                             );
                           }
