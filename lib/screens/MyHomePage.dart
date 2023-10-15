@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:safety_syncc/screens/MoodSelectionPage.dart';
 import 'package:safety_syncc/screens/SDmain.dart';
 
 import 'SelfDefense.dart';
@@ -136,6 +137,10 @@ class _MyHomePageState extends State<MyHomePage> {
               else if(text == 'Tracking') {
                 Navigator.push(context, MaterialPageRoute(
                     builder: (context) => LocationScreen()));
+              }
+              else if(text == 'Meditation') {
+                Navigator.push(context, MaterialPageRoute(
+                    builder: (context) => MoodSelect()));
               }
             }
 
