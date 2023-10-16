@@ -107,7 +107,7 @@ class SlidingButton extends StatefulWidget {
 }
 
 class _SlidingButtonState extends State<SlidingButton> {
-  Color? buttonColor = Colors.white70;
+  Color buttonColor = Colors.black;
 
   void changeButtonColor() {
     setState(() {
@@ -122,28 +122,31 @@ class _SlidingButtonState extends State<SlidingButton> {
       margin: EdgeInsets.symmetric(horizontal: 5),
       child: InkResponse(
         onTap: changeButtonColor,
-        child: ElevatedButton(
-          onPressed: () {
-            // Add your action here
-          },
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(buttonColor),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.network(
-                widget.imageUrl,
-                width: 50.0,
-                height: 50.0,
-                fit: BoxFit.cover,
-              ),
-              SizedBox(height: 10),
-              Text(
-                widget.text,
-                style: TextStyle(fontSize: 16),
-              ),
-            ],
+        child: Material(
+          color: buttonColor,
+          child: ElevatedButton(
+            onPressed: () {
+              // Add your action here
+            },
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(Colors.transparent),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.network(
+                  widget.imageUrl,
+                  width: 150.0,
+                  height: 150.0,
+                  fit: BoxFit.cover,
+                ),
+                SizedBox(height: 10),
+                Text(
+                  widget.text,
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
           ),
         ),
       ),
