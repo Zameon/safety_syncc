@@ -51,7 +51,7 @@ class HappyMoodPage extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            'To know yourself is to be confident. To be confident is to fearlessly express your potential.',
+                            'To know yourself is to be confident.',
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.grey[200],
@@ -73,7 +73,7 @@ class HappyMoodPage extends StatelessWidget {
             Expanded(
               child: Center(
                 child: SizedBox(
-                  height: 200,
+                  height: 250,
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: buttonData.entries.map((entry) {
@@ -107,32 +107,35 @@ class SlidingButton extends StatefulWidget {
 }
 
 class _SlidingButtonState extends State<SlidingButton> {
-  bool isHovered = false;
+  Color? buttonColor = Colors.white70;
+
+  void changeButtonColor() {
+    setState(() {
+      buttonColor = Colors.purple; // Change the color to blue when pressed.
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 200,
       margin: EdgeInsets.symmetric(horizontal: 5),
-      child: AnimatedContainer(
-        duration: Duration(milliseconds: 300),
-        width: isHovered ? 220 : 200,
+      child: InkResponse(
+        onTap: changeButtonColor,
         child: ElevatedButton(
           onPressed: () {
             // Add your action here
           },
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(
-              isHovered ? Colors.black : Colors.purple,
-            ),
+            backgroundColor: MaterialStateProperty.all(buttonColor),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.network(
                 widget.imageUrl,
-                width: 100.0,
-                height: 70.0,
+                width: 50.0,
+                height: 50.0,
                 fit: BoxFit.cover,
               ),
               SizedBox(height: 10),
