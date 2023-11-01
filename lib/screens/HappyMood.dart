@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'butterfly_pose.dart';
+import 'camel_pose.dart';
+import 'love.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -18,11 +21,12 @@ class HappyMoodPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Happy Mood'),
+        backgroundColor: Colors.purple,
       ),
       body: BackgroundImage(
         imageAsset:
         'https://static.vecteezy.com/system/resources/previews/023/810/461/non_2x/minimalist-background-purple-abstract-design-free-vector.jpg',
-        child: Column(
+        child: ListView(
           children: [
             Container(
               decoration: BoxDecoration(
@@ -70,21 +74,67 @@ class HappyMoodPage extends StatelessWidget {
                 ),
               ),
             ),
-            Expanded(
-              child: Center(
-                child: SizedBox(
-                  height: 250,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: buttonData.entries.map((entry) {
-                      return SlidingButton(
-                        text: entry.key,
-                        imageUrl: entry.value,
-                      );
-                    }).toList(),
-                  ),
+            SizedBox(height: 10),
+            Center(
+              child: Text(
+                'Meditation Music',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.purple,
                 ),
               ),
+            ),
+            Center(
+              child: SizedBox(
+                height: 250,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    SlidingButton(
+                      text: 'Love',
+                      imageUrl: buttonData['Love']!,
+                    ),
+                    SlidingButton(
+                      text: 'Peace',
+                      imageUrl: buttonData['Peace']!,
+                    ),
+                    SlidingButton(
+                      text: 'Hope',
+                      imageUrl: buttonData['Hope']!,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            Column(
+              children: [
+                Text(
+                  'Meditation Poses',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.purple,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    WhiteButtonWithImage(
+                      text: 'Camel Pose',
+                      imageUrl:
+                      'https://static.vecteezy.com/system/resources/previews/005/178/403/non_2x/woman-doing-camel-pose-or-ustrasana-exercise-free-vector.jpg',
+                    ),
+                    SizedBox(width: 30),
+                    WhiteButtonWithImage(
+                      text: 'Butterfly Pose',
+                      imageUrl:
+                      'https://static.vecteezy.com/system/resources/previews/015/708/606/non_2x/woman-doing-seated-butterfly-pose-beautiful-girl-practice-baddha-upavistha-titli-asana-flat-illustration-isolated-on-white-background-vector.jpg',
+                    ),
+                  ],
+                ),
+              ],
             ),
           ],
         ),
@@ -107,47 +157,100 @@ class SlidingButton extends StatefulWidget {
 }
 
 class _SlidingButtonState extends State<SlidingButton> {
-  Color buttonColor = Colors.black;
-
-  void changeButtonColor() {
-    setState(() {
-      buttonColor = Colors.purple; // Change the color to blue when pressed.
-    });
-  }
+  Color buttonColor = Colors.white;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 200,
       margin: EdgeInsets.symmetric(horizontal: 5),
-      child: InkResponse(
-        onTap: changeButtonColor,
-        child: Material(
-          color: buttonColor,
-          child: ElevatedButton(
-            onPressed: () {
-              // Add your action here
-            },
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.transparent),
+      child: ElevatedButton(
+        onPressed: () {
+          if (widget.text == 'Love') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MusicPlayer()), // Navigate to the Love screen
+            );
+          }
+        },
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(buttonColor),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.network(
+              widget.imageUrl,
+              width: 150.0,
+              height: 150.0,
+              fit: BoxFit.cover,
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.network(
-                  widget.imageUrl,
-                  width: 150.0,
-                  height: 150.0,
-                  fit: BoxFit.cover,
-                ),
-                SizedBox(height: 10),
-                Text(
-                  widget.text,
-                  style: TextStyle(fontSize: 16),
-                ),
-              ],
+            SizedBox(height: 10),
+            Text(
+              widget.text,
+              style: TextStyle(fontSize: 16, color: Colors.black),
             ),
-          ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class WhiteButtonWithImage extends StatefulWidget {
+  final String text;
+  final String imageUrl;
+
+  WhiteButtonWithImage({
+    required this.text,
+    required this.imageUrl,
+  });
+
+  @override
+  _WhiteButtonWithImageState createState() => _WhiteButtonWithImageState();
+}
+
+class _WhiteButtonWithImageState extends State<WhiteButtonWithImage> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 150,
+      height: 150,
+      margin: EdgeInsets.symmetric(horizontal: 5),
+      child: ElevatedButton(
+        onPressed: () {
+          // Add your action here
+          if (widget.text == 'Butterfly Pose') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ButterflyPoseScreen()),
+            );
+          }
+          if (widget.text == 'Camel Pose') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CamelPoseScreen()),
+            );
+          }
+        },
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(Colors.white),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.network(
+              widget.imageUrl,
+              width: 110.0,
+              height: 90.0,
+              fit: BoxFit.cover,
+            ),
+            SizedBox(height: 10),
+            Text(
+              widget.text,
+              style: TextStyle(fontSize: 16, color: Colors.black),
+            ),
+          ],
         ),
       ),
     );

@@ -185,4 +185,3 @@ class MoodPage extends StatelessWidget {
     );
   }
 }
-
