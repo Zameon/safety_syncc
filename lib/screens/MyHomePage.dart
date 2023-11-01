@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:safety_syncc/screens/About.dart';
+import 'package:safety_syncc/screens/Feedback.dart';
 import 'package:safety_syncc/screens/MoodSelectionPage.dart';
 import 'package:safety_syncc/screens/SDmain.dart';
 
@@ -26,6 +28,7 @@ class _MyHomePageState extends State<MyHomePage> {
             'Safety Sync',
             style: TextStyle(
               fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
         ),
@@ -141,6 +144,14 @@ class _MyHomePageState extends State<MyHomePage> {
               else if(text == 'Meditation') {
                 Navigator.push(context, MaterialPageRoute(
                     builder: (context) => MoodSelect()));
+              }
+              else if(text == 'About Us') {
+                Navigator.push(context, MaterialPageRoute(
+                    builder: (context) => AboutUsPage(Title: text,)));
+              }
+              else if(text == 'Feedback') {
+                Navigator.push(context, MaterialPageRoute(
+                    builder: (context) => FeedbackPage()));
               }
             }
 
