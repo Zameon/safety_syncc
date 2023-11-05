@@ -4,6 +4,7 @@ import 'package:safety_syncc/screens/About.dart';
 import 'package:safety_syncc/screens/Feedback.dart';
 import 'package:safety_syncc/screens/MoodSelectionPage.dart';
 import 'package:safety_syncc/screens/SDmain.dart';
+import 'package:safety_syncc/screens/community.dart';
 
 import 'SelfDefense.dart';
 import 'location.dart';
@@ -152,6 +153,10 @@ class _MyHomePageState extends State<MyHomePage> {
               else if(text == 'Feedback') {
                 Navigator.push(context, MaterialPageRoute(
                     builder: (context) => FeedbackPage()));
+              }
+              else if(text == 'Community') {
+                Navigator.push(context, MaterialPageRoute(
+                    builder: (context) => Community()));
               }
             }
 

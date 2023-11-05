@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:safety_syncc/screens/HappyMood.dart';
 
 void main() {
   runApp(MoodSelect());
@@ -14,7 +15,7 @@ class MoodSelect extends StatelessWidget {
       ),
       home: MoodSelectionPage(),
       routes: {
-        '/happy': (context) => MoodPage(mood: 'Happy'),
+        '/happy': (context) => HappyMoodPage(),
         '/sad': (context) => MoodPage(mood: 'Sad'),
         '/fear': (context) => MoodPage(mood: 'Fear'),
         '/anger': (context) => MoodPage(mood: 'Anger'),
