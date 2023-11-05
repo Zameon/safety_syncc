@@ -42,6 +42,26 @@ class _FriendSearchScreenState extends State<FriendSearchScreen> {
     // here you write the codes to input the data into firestore
   }
 
+  void showFriendRequestSentDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Friend Request Sent'),
+          content: Text('Your friend request has been sent.'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
 
   void _sendFriendRequest(String friendName) {
@@ -52,6 +72,7 @@ class _FriendSearchScreenState extends State<FriendSearchScreen> {
       'receiver': friendName,
       'status': 'pending',
     });
+
   }
 
   List<QueryDocumentSnapshot> searchResultsList = [];
@@ -125,6 +146,7 @@ class _FriendSearchScreenState extends State<FriendSearchScreen> {
                           onPressed: () {
                             print(inputData() + " in friend requests");
                             _sendFriendRequest(friendName);
+                            showFriendRequestSentDialog(context);
                           },
                         ),
                       );

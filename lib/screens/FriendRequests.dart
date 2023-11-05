@@ -69,6 +69,26 @@ class _FriendRequestsScreenState extends State<FriendRequests> {
 
   }
 
+  void showFriendRequestAcceptedDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Friend Request Accepted'),
+          content: Text('You have accepted the friend request.'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   List<QueryDocumentSnapshot> searchResultsList = [];
 
 
@@ -103,6 +123,7 @@ class _FriendRequestsScreenState extends State<FriendRequests> {
                         onPressed: () {
                           print(getUser() + "in friend requests");
                           _acceptFriendRequest(friendName);
+                          showFriendRequestAcceptedDialog(context);
                         },
                       ),
                     );

@@ -40,6 +40,26 @@ class _PendingRequestsScreenState extends State<PendingRequests> {
     // here you write the codes to input the data into firestore
   }
 
+  void showRequestDeleted(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Friend Request Removed'),
+          content: Text('You have removed the friend request.'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _deleteFriendRequest(String friendName) {
     // Implement the logic to send a friend request
     print(curr_username + " " + friendName);
@@ -95,6 +115,7 @@ class _PendingRequestsScreenState extends State<PendingRequests> {
                         onPressed: () {
                           print(getUser() + "in friend requests");
                          _deleteFriendRequest(friendName);
+                         showRequestDeleted(context);
                         },
                       ),
                     );
