@@ -45,10 +45,12 @@ class _FriendRequestsScreenState extends State<FriendRequests> {
     _firestore.collection('friends').add({
       'user': getUser(), // Replace with the sender's username
       'friend': friendName,
+      'sharelocation':false,
     });
     _firestore.collection('friends').add({
       'user': friendName, // Replace with the sender's username
       'friend': getUser(),
+      'sharelocation':false,
     });
 
     FirebaseFirestore.instance

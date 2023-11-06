@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:safety_syncc/screens/location.dart';
 
 class FriendList extends StatefulWidget {
   @override
@@ -32,37 +33,47 @@ class _FriendListScreenState extends State<FriendList> {
       print(curr_username + "ekhane takao please");
 
     }).catchError((error) {
-      // Handle any errors that occur during the search
+
       print("Error searching for friends: $error");
     });
 
     return curr_username;
-    // here you write the codes to input the data into firestore
+
   }
 
-  void _deleteFriendRequest(String friendName) {
-    // Implement the logic to send a friend request
-    print(curr_username + " " + friendName);
+  void updateData(bool val, String friendName) {
+    // get the document ID
     FirebaseFirestore.instance
-        .collection('friend_requests') // Replace with your collection name
-        .where('receiver', isEqualTo: friendName)
-        .where('sender', isEqualTo: getUser())// Replace with your field and value
+        .collection('friends')
+        .where('friend', isEqualTo: friendName)
+        .where('user', isEqualTo: getUser())
         .get()
         .then((snapshot) {
       for (DocumentSnapshot ds in snapshot.docs) {
-        ds.reference.delete();
+        print(ds.reference.id + " edike takao");
+        FirebaseFirestore.instance
+            .collection('friends')
+            .doc(ds.reference.id)
+            .update({'sharelocation': !val})
+            .then((value) {
+          print("Value updated successfully.");
+        })
+            .catchError((error) {
+          print("Error updating value: $error");
+        });
       }
-      print("Documents with specified condition deleted successfully.");
+
+      print("Document id found.");
     })
         .catchError((error) {
-      print("Error deleting documents: $error");
+      print("Error finding documents: $error");
     });
-
 
   }
 
-  List<QueryDocumentSnapshot> searchResultsList = [];
 
+  List<QueryDocumentSnapshot> searchResultsList = [];
+  bool isSharingON = false;
 
   @override
   Widget build(BuildContext context) {
@@ -89,14 +100,39 @@ class _FriendListScreenState extends State<FriendList> {
                     String friendName = users[index]['friend'];
                     return ListTile(
                       title: Text(friendName),
-                      /*trailing: IconButton(
-                        icon: Icon(Icons.cancel, color: Colors.red),
-                        onPressed: () {
-                          print(getUser() + "in friend requests");
-                          _deleteFriendRequest(friendName);
-                        },
-                      ),*/
-                    );
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: new Icon(isSharingON ? Icons.location_on:Icons.location_off),
+                            onPressed: () {
+                              // Implement edit functionality
+                              updateData(users[index]['sharelocation'], friendName);
+                              setState(() {
+                                if(users[index]['sharelocation'] == false)
+                                  {
+                                    isSharingON = false;
+                                  }
+                                else
+                                  {
+                                    isSharingON = true;
+                                  }
+                              });
+                              print('Edit item $index');
+                       },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.my_location_sharp),
+                            onPressed: () {
+                              // Implement delete functionality
+                              Navigator.push(context, MaterialPageRoute(
+                                  builder: (context) => LocationScreen()));
+                              print('Delete item $index');
+                            },
+                          ),
+                        ],
+                      ),
+                      );
                   },
                 );
               },
@@ -107,3 +143,4 @@ class _FriendListScreenState extends State<FriendList> {
     );
   }
 }
+
