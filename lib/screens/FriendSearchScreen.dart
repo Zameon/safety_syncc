@@ -95,7 +95,6 @@ class _FriendSearchScreenState extends State<FriendSearchScreen> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
