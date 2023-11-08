@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,20 +11,25 @@ class FeedbackPage extends StatefulWidget {
 class _FeedbackPageState extends State<FeedbackPage> {
   final TextEditingController feedbackController = TextEditingController();
   double rating = 0.0;
+  String? name;
+  final usr = FirebaseAuth.instance.currentUser;
+  CollectionReference collectionReference = FirebaseFirestore.instance.collection('UserData');
 
-  void submitFeedback() async{
+   submitFeedback() async{
+    await getUsersData();
     // Handle the feedback submission here.
     // You can send the feedback and rating to your backend or handle it locally.
     // After submission, navigate to the confirmation page.
 
     final CollectionReference feedbackCollection =
-    FirebaseFirestore.instance.collection('feedback'); // Replace 'feedback' with your Firestore collection name
+    FirebaseFirestore.instance.collection('FeedBack'); // Replace 'feedback' with your Firestore collection name
 
     try {
       await feedbackCollection.add({
         'comment': feedbackController.text,
         'rating': rating,
         'timestamp': FieldValue.serverTimestamp(),
+        'username': name,
       });
 
       Navigator.of(context).push(
@@ -95,6 +101,15 @@ class _FeedbackPageState extends State<FeedbackPage> {
         ),
       ),
     );
+  }
+
+  getUsersData() async {
+    await collectionReference.doc(usr!.uid).get().then((value) {
+      setState(() {
+        name =  value['username'];
+      });
+    });
+    print(name);
   }
 }
 
