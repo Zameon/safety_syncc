@@ -2,28 +2,55 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 class FriendSearchScreen extends StatefulWidget {
   @override
   _FriendSearchScreenState createState() => _FriendSearchScreenState();
-
 }
-
 
 class _FriendSearchScreenState extends State<FriendSearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
   //late String curr_username = "";
+  final usr = FirebaseAuth.instance.currentUser;
+  late String? curr_name;
+  late Map<String, bool> userFriends = {};
 
+  Future<void> getFriends() async {
+    await _firestore.collection('UserData').doc(usr!.uid).get().then((value) {
+      setState(() {
+        curr_name = value['username'];
+        print(curr_name);
+      });
+    });
 
-  String inputData()  {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('friends')
+        .where("friend", isEqualTo: curr_name)
+        .get();
+
+    Map<String, bool> data = {};
+    querySnapshot.docs.forEach((doc) {
+      data[doc.get('user')] = true;
+    });
+
+    setState(() {
+      userFriends = data;
+      print(userFriends);
+    });
+
+    return;
+  }
+
+  String inputData() {
     String curr_username = "";
     final User? user = auth.currentUser;
     final uid = user?.uid;
     print(user?.uid);
+
     ///for getting the username
-    FirebaseFirestore.instance.collection('UserData')
+    FirebaseFirestore.instance
+        .collection('UserData')
         .where("email", isGreaterThanOrEqualTo: user?.email)
         .get()
         .then((querySnapshot) {
@@ -62,8 +89,6 @@ class _FriendSearchScreenState extends State<FriendSearchScreen> {
     );
   }
 
-
-
   void _sendFriendRequest(String friendName) {
     // Implement the logic to send a friend request
     print(inputData() + " " + friendName);
@@ -72,14 +97,22 @@ class _FriendSearchScreenState extends State<FriendSearchScreen> {
       'receiver': friendName,
       'status': 'pending',
     });
+  }
 
+  @override
+  void initState() {
+    super.initState();
+    getFriends();
+    // location.changeSettings(interval: 300, accuracy: loc.LocationAccuracy.high);
+    // location.enableBackgroundMode(enable: true);
   }
 
   List<QueryDocumentSnapshot> searchResultsList = [];
 
   // Function to search for friends based on the query
   void _searchFriends(String query) {
-    FirebaseFirestore.instance.collection('UserData')
+    FirebaseFirestore.instance
+        .collection('UserData')
         .where("username", isGreaterThanOrEqualTo: query)
         .where("username", isLessThan: query + 'z')
         .get()
@@ -115,8 +148,7 @@ class _FriendSearchScreenState extends State<FriendSearchScreen> {
                     inputData();
                     print(inputData() + " before Search");
                     _searchFriends(query);
-                    print(inputData() +  "afterSearch");
-
+                    print(inputData() + "afterSearch");
                   },
                 ),
               ),
@@ -125,31 +157,44 @@ class _FriendSearchScreenState extends State<FriendSearchScreen> {
             Text('Search Results:'),
             StreamBuilder<QuerySnapshot>(
               //stream: _firestore.collection('UsersData').snapshots(),
-              stream: FirebaseFirestore.instance.collection('UserData')
-                  .where('username', isGreaterThanOrEqualTo: _searchController.text)
-                  .where('username', isLessThan: _searchController.text + 'z').snapshots(),
+              stream: FirebaseFirestore.instance
+                  .collection('UserData')
+                  .where('username',
+                      isGreaterThanOrEqualTo: _searchController.text)
+                  .where('username', isLessThan: _searchController.text + 'z')
+                  .where('username', isNotEqualTo: curr_name)
+                  .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return CircularProgressIndicator();
                 }
                 List<QueryDocumentSnapshot> users = snapshot.data!.docs;
-                return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: users.length,
-                  itemBuilder: (context, index) {
-                    String friendName = users[index]['username'];
-                      return ListTile(
-                        title: Text(friendName),
-                        trailing: IconButton(
-                          icon: Icon(Icons.add),
-                          onPressed: () {
-                            print(inputData() + " in friend requests");
-                            _sendFriendRequest(friendName);
-                            showFriendRequestSentDialog(context);
-                          },
-                        ),
-                      );
-
+                return FutureBuilder(
+                  future: getFriends(),
+                  builder:
+                      (BuildContext context, AsyncSnapshot<void> userSnapshot) {
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: users.length,
+                      itemBuilder: (context, index) {
+                        String friendName = users[index]['username'];
+                        if (userFriends[friendName] == true) {
+                          return Container();
+                        } else {
+                          return ListTile(
+                            title: Text(friendName),
+                            trailing: IconButton(
+                              icon: Icon(Icons.add),
+                              onPressed: () {
+                                print(inputData() + " in friend requests");
+                                _sendFriendRequest(friendName);
+                                showFriendRequestSentDialog(context);
+                              },
+                            ),
+                          );
+                        }
+                      },
+                    );
                   },
                 );
               },
