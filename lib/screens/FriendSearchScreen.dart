@@ -16,6 +16,23 @@ class _FriendSearchScreenState extends State<FriendSearchScreen> {
   late String? curr_name;
   late Map<String, bool> userFriends = {};
 
+  Future<void> getSentPeople() async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('friend_requests')
+        .where("sender", isEqualTo: curr_name)
+        .get();
+
+    setState(() {
+
+      querySnapshot.docs.forEach((doc) {
+        userFriends[doc.get('receiver')] = true;
+      });
+      print(userFriends);
+    });
+
+    return;
+  }
+
   Future<void> getFriends() async {
     await _firestore.collection('UserData').doc(usr!.uid).get().then((value) {
       setState(() {
@@ -24,18 +41,23 @@ class _FriendSearchScreenState extends State<FriendSearchScreen> {
       });
     });
 
+    getSentPeople();
+
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('friends')
         .where("friend", isEqualTo: curr_name)
         .get();
 
     Map<String, bool> data = {};
-    querySnapshot.docs.forEach((doc) {
-      data[doc.get('user')] = true;
-    });
+    //querySnapshot.docs.forEach((doc) {
+    //  data[doc.get('user')] = true;
+    //});
 
     setState(() {
-      userFriends = data;
+      //userFriends = data;
+      querySnapshot.docs.forEach((doc) {
+        userFriends[doc.get('user')] = true;
+      });
       print(userFriends);
     });
 
@@ -90,13 +112,16 @@ class _FriendSearchScreenState extends State<FriendSearchScreen> {
   }
 
   void _sendFriendRequest(String friendName) {
+
+        print(inputData() + " " + friendName);
+        _firestore.collection('friend_requests').add({
+          'sender': inputData(), // Replace with the sender's username
+          'receiver': friendName,
+          'status': 'pending',
+        });
+
     // Implement the logic to send a friend request
-    print(inputData() + " " + friendName);
-    _firestore.collection('friend_requests').add({
-      'sender': inputData(), // Replace with the sender's username
-      'receiver': friendName,
-      'status': 'pending',
-    });
+
   }
 
   @override
