@@ -58,6 +58,7 @@ class _LocationScreenState extends State<LocationScreen> {
     return;
   }
 
+  late Future<Map<String, bool>> _userFriends;
   @override
   void initState() {
     super.initState();
