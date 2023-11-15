@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:safety_syncc/screens/HappyMood.dart';
+import 'package:safety_syncc/screens/MyHomePage.dart';
 
 void main() {
   runApp(MoodSelect());
@@ -31,7 +32,23 @@ class MoodSelectionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Mood Selector'),
+        backgroundColor: Colors.purple[300],
+        title: const Center(
+          child: Text(
+            'Mood Selector',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(
+                builder: (context) => MyHomePage()));// This pops the current route off the navigation stack
+          },
+        ),
       ),
       body: BackgroundImage(
         imageAsset:

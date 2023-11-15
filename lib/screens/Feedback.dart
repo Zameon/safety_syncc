@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class FeedbackPage extends StatefulWidget {
   @override
@@ -15,7 +16,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
   final usr = FirebaseAuth.instance.currentUser;
   CollectionReference collectionReference = FirebaseFirestore.instance.collection('UserData');
 
-   submitFeedback() async{
+  submitFeedback() async{
     await getUsersData();
     // Handle the feedback submission here.
     // You can send the feedback and rating to your backend or handle it locally.
@@ -42,6 +43,11 @@ class _FeedbackPageState extends State<FeedbackPage> {
       print('Error submitting feedback: $e');
     }
 
+    feedbackController.clear();
+    setState(() {
+      rating = 0;  // Or whatever your initial rating value is
+    });
+
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => ConfirmationPage(),
@@ -64,9 +70,8 @@ class _FeedbackPageState extends State<FeedbackPage> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
+      body: ListView(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
           children: <Widget>[
             TextField(
               controller: feedbackController,
@@ -74,32 +79,101 @@ class _FeedbackPageState extends State<FeedbackPage> {
               maxLines: 4,
             ),
             SizedBox(height: 20),
-            Text('Rate your experience:'),
-            RatingBar.builder(
-              initialRating: rating,
-              minRating: 1,
-              direction: Axis.horizontal,
-              allowHalfRating: false,
-              itemCount: 5,
-              itemSize: 40,
-              itemBuilder: (context, _) => Icon(
-                Icons.star,
-                color: Colors.amber,
+            Center(child: Text('Rate your experience:')),
+            Center(
+              child: RatingBar.builder(
+                initialRating: rating,
+                minRating: 1,
+                direction: Axis.horizontal,
+                allowHalfRating: false,
+                itemCount: 5,
+                itemSize: 40,
+                itemBuilder: (context, _) => Icon(
+                  Icons.star,
+                  color: Colors.amber,
+                ),
+                onRatingUpdate: (newRating) {
+                  setState(() {
+                    rating = newRating;
+                  });
+                },
               ),
-              onRatingUpdate: (newRating) {
-                setState(() {
-                  rating = newRating;
-                });
-              },
             ),
             SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: submitFeedback,
-              child: Text('Submit Feedback'),
+            Center(
+              child: ElevatedButton(
+                onPressed: submitFeedback,
+                child: Text(
+                    'Submit Feedback',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.purple[200],
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                )
+              ),
             ),
+            SizedBox(height: 20),
+            const Text(
+              'Reviews',
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 20),
+            StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance.collection('FeedBack').snapshots(),
+                builder: (context, snapshot) {
+                  List<Row> clientWidgets = [];
+                  if(snapshot.hasData)
+                  {
+                    final clients = snapshot.data?.docs.reversed.toList();
+
+                    for(var client in clients!)
+                    {
+                      final clientWidget = Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            width:100,
+                              child: Text(client['username'])
+                          ),
+                          Container(
+                            width: 150,  // Specify your desired width
+                            child: Flexible(
+                              child: Text(
+                                client['comment'],
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 3,
+                                textAlign: TextAlign.left,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width:30,
+                              child: Text(client['rating'].toString())),
+                         // Text(client['timestamp'].toString()),
+                        ],
+                      );
+                      clientWidgets.add(clientWidget);
+                    }
+                  }
+                  return Expanded(
+                    child: ListView(
+                      children: clientWidgets,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                    ),
+                  );
+                }
+            ),
+            Image(image: AssetImage("images/feedbackgif.gif")),
           ],
         ),
-      ),
     );
   }
 
@@ -118,7 +192,16 @@ class ConfirmationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Feedback Confirmation'),
+        backgroundColor: Colors.purple[300],
+        title: const Center(
+          child: Text(
+            'Confirmation',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ),
       ),
       body: Center(
         child: Column(

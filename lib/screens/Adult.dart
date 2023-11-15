@@ -51,24 +51,33 @@ class _AdultState extends State<Adult> {
             ),
           ),
         ),
-        body: Scrollbar(
-          thumbVisibility: true,
-          child: ListView.separated(
-              padding: EdgeInsets.all(10),
-              itemBuilder: (context, index) => _buildButton(images[index], links[index]),
-              separatorBuilder: (context,index) => SizedBox(height: 5,),
-              itemCount: images.length),
+        body: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.purple[300]!, Colors.purple[100]!],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
+            child: Scrollbar(
+              thumbVisibility: true,
+              child: ListView.separated(
+                  padding: EdgeInsets.all(10),
+                  itemBuilder: (context, index) => _buildButton(images[index], links[index]),
+                  separatorBuilder: (context,index) => SizedBox(height: 5,),
+                  itemCount: images.length),
 
+            )
         )
     );
   }
 
   Widget _buildButton(String image, String link){
     return Card(
-      margin: EdgeInsets.fromLTRB(7, 7, 7, 7),
-      color: Colors.purple[100],
+      margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
+      color: Colors.purple[400],
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(3),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -81,6 +90,7 @@ class _AdultState extends State<Adult> {
                   'images/$image.png',
                   height: 150,
                   width: MediaQuery.of(context).size.width,
+                  fit: BoxFit.cover,
                 ),
               ),
             ),

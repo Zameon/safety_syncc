@@ -5,6 +5,7 @@ import 'package:safety_syncc/screens/Feedback.dart';
 import 'package:safety_syncc/screens/MoodSelectionPage.dart';
 import 'package:safety_syncc/screens/SDmain.dart';
 import 'package:safety_syncc/screens/community.dart';
+import 'package:safety_syncc/screens/navbar.dart';
 
 import 'SelfDefense.dart';
 import 'location.dart';
@@ -21,7 +22,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+    home: Scaffold(
+      drawer: Navbar(),
       appBar: AppBar(
         backgroundColor: Colors.purple[300],
         title: const Center(
@@ -76,7 +80,8 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-    );
+    ),
+      );
   }
 
   Widget getExpanded(String image, String text, String subtext) {
