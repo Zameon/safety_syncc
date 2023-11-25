@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
 
-import 'butterfly_pose.dart';
-import 'camel_pose.dart';
+import 'Childspose.dart';
+import 'Easypose.dart';
 import 'love.dart';
+
 
 void main() {
   runApp(MaterialApp(
-    home: HappyMoodPage(),
+    home: SadMoodPage(),
   ));
 }
 
-class HappyMoodPage extends StatelessWidget {
+class SadMoodPage extends StatelessWidget {
   final Map<String, String> buttonData = {
-    'Love': 'https://static.vecteezy.com/system/resources/previews/005/426/657/non_2x/cute-panda-couple-love-cartoon-icon-illustration-animal-icon-concept-isolated-premium-flat-cartoon-style-vector.jpg',
-    'Peace': 'https://static.vecteezy.com/system/resources/previews/003/820/044/original/cute-dove-flying-free-vector.jpg',
-    'Hope': 'https://static.vecteezy.com/system/resources/previews/029/569/503/non_2x/hope-lettering-poster-no-war-sign-floral-and-flower-ornamental-decorations-hand-drawn-illustration-organic-drawings-support-ukraine-vintage-style-vector.jpg',
+    'Low Mood': 'https://static.vecteezy.com/system/resources/previews/014/310/105/non_2x/woman-in-depression-sitting-and-hugging-her-knees-under-rain-cloud-psychology-depression-bad-mood-stress-mental-health-concept-vector.jpg',
+    'Dissapointed': 'https://static.vecteezy.com/system/resources/previews/009/251/010/non_2x/young-man-unhappy-looking-at-phone-he-is-feeling-nervous-of-bad-confused-and-disappointed-flat-illustration-isolated-on-white-background-free-vector.jpg',
+    'Helpless': 'https://static.vecteezy.com/system/resources/previews/006/074/388/non_2x/scared-depressed-sad-girl-looks-lonely-illustration-of-helpless-frightened-child-vector.jpg',
   };
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Happy Mood'),
+        title: Text('Sad Mood'),
         backgroundColor: Colors.purple,
       ),
       body: BackgroundImage(
@@ -93,16 +94,16 @@ class HappyMoodPage extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   children: [
                     SlidingButton(
-                      text: 'Love',
-                      imageUrl: buttonData['Love']!,
+                      text: 'Low Mood',
+                      imageUrl: buttonData['Low Mood']!,
                     ),
                     SlidingButton(
-                      text: 'Peace',
-                      imageUrl: buttonData['Peace']!,
+                      text: 'Dissapointed',
+                      imageUrl: buttonData['Dissapointed']!,
                     ),
                     SlidingButton(
-                      text: 'Hope',
-                      imageUrl: buttonData['Hope']!,
+                      text: 'Helpless',
+                      imageUrl: buttonData['Helpless']!,
                     ),
                   ],
                 ),
@@ -123,15 +124,15 @@ class HappyMoodPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     WhiteButtonWithImage(
-                      text: 'Camel Pose',
+                      text: 'Childs Pose',
                       imageUrl:
-                      'https://static.vecteezy.com/system/resources/previews/005/178/403/non_2x/woman-doing-camel-pose-or-ustrasana-exercise-free-vector.jpg',
+                      'https://static.vecteezy.com/system/resources/thumbnails/005/178/339/small/woman-doing-child-s-pose-stretch-exercise-free-vector.jpg',
                     ),
                     SizedBox(width: 30),
                     WhiteButtonWithImage(
-                      text: 'Butterfly Pose',
+                      text: 'Easy Pose',
                       imageUrl:
-                      'https://static.vecteezy.com/system/resources/previews/015/708/606/non_2x/woman-doing-seated-butterfly-pose-beautiful-girl-practice-baddha-upavistha-titli-asana-flat-illustration-isolated-on-white-background-vector.jpg',
+                      'https://static.vecteezy.com/system/resources/previews/005/311/067/original/woman-doing-easy-pose-sukhasana-exercise-flat-illustration-isolated-on-white-background-free-vector.jpg',
                     ),
                   ],
                 ),
@@ -167,7 +168,7 @@ class _SlidingButtonState extends State<SlidingButton> {
       margin: EdgeInsets.symmetric(horizontal: 5),
       child: ElevatedButton(
         onPressed: () {
-          if (widget.text == 'Love') {
+          if (widget.text == 'Low Mood') {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => MusicPlayer()), // Navigate to the Love screen
@@ -221,16 +222,16 @@ class _WhiteButtonWithImageState extends State<WhiteButtonWithImage> {
       child: ElevatedButton(
         onPressed: () {
           // Add your action here
-          if (widget.text == 'Butterfly Pose') {
+          if (widget.text == 'Childs Pose') {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ButterflyPoseScreen()),
+              MaterialPageRoute(builder: (context) => ChildsPoseScreen()),
             );
           }
-          if (widget.text == 'Camel Pose') {
+          if (widget.text == 'Easy Pose') {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => CamelPoseScreen()),
+              MaterialPageRoute(builder: (context) => EasyPoseScreen()),
             );
           }
         },

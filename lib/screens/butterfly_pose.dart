@@ -27,7 +27,7 @@ class ButterflyPoseScreen extends StatelessWidget {
                     height: 300.0,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: NetworkImage('https://static.vecteezy.com/system/resources/thumbnails/003/288/713/small_2x/happy-fitness-woman-yoga-relax-meditation-in-butterfly-pose-at-home-photo.JPG'),
+                        image: AssetImage('images/butterfly.gif'), // Update with your actual local image path
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -55,7 +55,6 @@ class ButterflyPoseScreen extends StatelessWidget {
                     // Fixed height for the bullet points
                     child: ListView(
                       children: [
-
                         bulletPoint('Sit with your legs bent at the knees and your feet.'),
                         bulletPoint('Hold your feet with your hands.'),
                         bulletPoint('Improves flexibility in the inner thighs and groins.'),

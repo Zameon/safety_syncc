@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class CamelPoseScreen extends StatelessWidget {
+class ChildsPoseScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Camel Pose'),
+        title: Text('Childs Pose'),
         backgroundColor: Colors.purple,
       ),
       body: Container(
@@ -27,14 +27,14 @@ class CamelPoseScreen extends StatelessWidget {
                     height: 300.0,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage('images/camel.gif'),
+                        image: AssetImage('images/childs.gif'), // Update with your actual local image path
                         fit: BoxFit.cover,
                       ),
                     ),
                     child: SizedBox(height: 20), // Add a space for text alignment
                   ),
                   Text(
-                    'Camel Pose (Ustrasana)',
+                    'Childs Pose (Balasan)',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -43,7 +43,7 @@ class CamelPoseScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 10),
                   Text(
-                    'The Camel Pose, also known as Ustrasana, is a yoga posture that provides various physical and mental benefits. Here are some key points about this pose:',
+                    'Childs pose is a yoga pose that stretches the back, hips, thighs, and ankles. It can also help relieve stress and fatigue:',
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.white,
@@ -55,13 +55,13 @@ class CamelPoseScreen extends StatelessWidget {
                     // Fixed height for the bullet points
                     child: ListView(
                       children: [
-                        bulletPoint('Kneel on the floor with your legs hip-width apart.'),
-                        bulletPoint('Lean backward and reach your heels with your hands.'),
-                        bulletPoint('Open up your chest and bend your spine.'),
-                        bulletPoint('Stretches the front of the body.'),
-                        bulletPoint('Improves posture and back flexibility.'),
-                        bulletPoint('Relieves stress and anxiety.'),
-                        bulletPoint('It\'s a great pose for heart opening.'),
+                        bulletPoint('Kneel on the floor or a yoga mat.'),
+                        bulletPoint('Touch your big toes together.'),
+                        bulletPoint('Sit back on your heels.'),
+                        bulletPoint('Separate your knees about as wide as your hips.'),
+                        bulletPoint('Bend forward until your stomach touches your thighs.'),
+                        bulletPoint('Rest your forehead on the floor.'),
+                        bulletPoint('Extend your arms alongside your torso.'),
                       ],
                     ),
                   ),

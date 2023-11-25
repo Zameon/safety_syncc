@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' show AppBar, BuildContext, Center, ColorScheme, Colors, Column, FloatingActionButton, Icon, Icons, MainAxisAlignment, MaterialApp, MaterialPageRoute, Scaffold, State, StatefulWidget, StatelessWidget, Text, Theme, ThemeData, Widget, runApp;
 import 'package:safety_syncc/screens/signin_screen.dart';
 
+
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if(kIsWeb){

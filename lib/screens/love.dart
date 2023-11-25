@@ -8,16 +8,15 @@ class MusicPlayer extends StatefulWidget {
 
 class _MusicPlayerState extends State<MusicPlayer> {
   AudioPlayer audioPlayer = AudioPlayer();
-  String audioUrl = 'https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3';
+  String audioUrl =
+      'https://dl.espressif.com/dl/audio/ff-16b-1c-11025hz.mp3';
   bool isPlaying = false;
 
   @override
   void initState() {
     super.initState();
 
-    audioPlayer.onPlayerStateChanged.listen((event) {
-
-    });
+    audioPlayer.onPlayerStateChanged.listen((event) {});
   }
 
   Future<void> playAudio() async {
@@ -53,27 +52,48 @@ class _MusicPlayerState extends State<MusicPlayer> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Music Player'),
+        title: Text('Meditation Time'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'My Audio File',
-              style: TextStyle(fontSize: 24),
-            ),
-            SizedBox(height: 20),
-            isPlaying
-                ? ElevatedButton(
-              onPressed: pauseAudio,
-              child: Text('Pause'),
-            )
-                : ElevatedButton(
-              onPressed: playAudio,
-              child: Text('Play'),
-            ),
-          ],
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: NetworkImage(
+                'https://static.vecteezy.com/system/resources/previews/016/533/083/non_2x/light-purple-backdrop-with-music-notes-vector.jpg'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.network(
+                'https://static.vecteezy.com/system/resources/previews/010/966/263/non_2x/lp-vinyl-record-free-vector.jpg',
+                width: 200,
+                height: 200,
+                fit: BoxFit.cover,
+              ),
+              SizedBox(height: 20),
+              isPlaying
+                  ? ElevatedButton(
+                onPressed: pauseAudio,
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                ),
+                child: Text('Pause'),
+              )
+                  : ElevatedButton(
+                onPressed: playAudio,
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                ),
+                child: Text('Play'),
+              ),
+            ],
+          ),
         ),
       ),
     );
