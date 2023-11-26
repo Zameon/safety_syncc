@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:safety_syncc/screens/DisgustMood.dart';
+import 'package:safety_syncc/screens/FearMood.dart';
 import 'package:safety_syncc/screens/HappyMood.dart';
 import 'package:safety_syncc/screens/MyHomePage.dart';
+import 'package:safety_syncc/screens/SurpriseMood.dart';
 
+import 'AngerMood.dart';
 import 'SadMood.dart';
 
 void main() {
@@ -20,10 +24,10 @@ class MoodSelect extends StatelessWidget {
       routes: {
         '/happy': (context) => HappyMoodPage(),
         '/sad': (context) => SadMoodPage(),
-        '/fear': (context) => MoodPage(mood: 'Fear'),
-        '/anger': (context) => MoodPage(mood: 'Anger'),
-        '/disgust': (context) => MoodPage(mood: 'Disgust'),
-        '/surprise': (context) => MoodPage(mood: 'Surprise'),
+        '/fear': (context) => FearMoodPage(),
+        '/anger': (context) => AngerMoodPage(),
+        '/disgust': (context) => DisgustMoodPage(),
+        '/surprise': (context) => SurpriseMoodPage(),
       },
     );
   }

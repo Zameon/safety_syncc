@@ -5,7 +5,7 @@ class TreePoseScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Butterfly Pose'),
+        title: Text('Tree Pose'),
         backgroundColor: Colors.purple,
       ),
       body: Container(
@@ -27,14 +27,14 @@ class TreePoseScreen extends StatelessWidget {
                     height: 300.0,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage('images/butterfly.gif'), // Update with your actual local image path
+                        image: AssetImage('images/tree.gif'), // Update with your actual local image path
                         fit: BoxFit.cover,
                       ),
                     ),
                     child: SizedBox(height: 20), // Add a space for text alignment
                   ),
                   Text(
-                    'Butterfly Pose (Baddha Konasana)',
+                    'Tree pose (Vrikshasana)',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -43,7 +43,7 @@ class TreePoseScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 10),
                   Text(
-                    'The Butterfly Pose, also known as Baddha Konasana, is a yoga posture that provides various physical and mental benefits. Here are some key points about this pose:',
+                    'The tree pose, or Vrikshasana in Sanskrit, is a yoga pose that involves balancing on one leg while bending the other leg and placing the foot inside the groin of the standing leg:',
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.white,
@@ -55,13 +55,13 @@ class TreePoseScreen extends StatelessWidget {
                     // Fixed height for the bullet points
                     child: ListView(
                       children: [
-                        bulletPoint('Sit with your legs bent at the knees and your feet.'),
-                        bulletPoint('Hold your feet with your hands.'),
-                        bulletPoint('Improves flexibility in the inner thighs and groins.'),
-                        bulletPoint('Stimulates the abdominal organs and helps digestion.'),
-                        bulletPoint('Calms the mind and reduces stress and fatigue.'),
-                        bulletPoint('Enhances blood circulation in the pelvis.'),
-                        bulletPoint('It\'s a great pose for meditation and relaxation.'),
+                        bulletPoint('Stand straight with your feet aligned and touching.'),
+                        bulletPoint('Balance firmly on your left leg.'),
+                        bulletPoint('Lift your right leg.'),
+                        bulletPoint('Join your palms in prayer at your chest level.'),
+                        bulletPoint('Hold the position while breathing deeply.'),
+                        bulletPoint('Lower your arms to chest and separate your palms.'),
+
                       ],
                     ),
                   ),

@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:safety_syncc/screens/signin_screen.dart';
 
-import '../reusable_widgets/reusable_widget_signup.dart';
+import '../reusable_widgets/reusable_widget_signin.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -12,12 +12,43 @@ class SignUpScreen extends StatefulWidget {
   _SignUpScreenState createState() => _SignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _SignUpScreenState extends State<SignUpScreen>
+    with SingleTickerProviderStateMixin {
   TextEditingController _passwordTextController = TextEditingController();
   TextEditingController _emailTextController = TextEditingController();
   TextEditingController _userNameTextController = TextEditingController();
   TextEditingController _phoneNumberController = TextEditingController();
   String? _errorText;
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 2),
+    );
+
+    _fadeAnimation = Tween<double>(
+      begin: .0,
+      end: 1.0,
+    ).animate(_animationController);
+
+    _slideAnimation = Tween<Offset>(
+      begin: Offset(0, -5),
+      end: Offset(0, 0),
+    ).animate(_animationController);
+
+    _animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +60,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         title: const Text(
           "Sign Up",
           style: TextStyle(
-            color: Colors.white,
+            color: Colors.black,
             fontSize: 24,
             fontWeight: FontWeight.bold,
           ),
@@ -60,9 +91,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               height: 260,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage(
-                    'https://static.vecteezy.com/system/resources/previews/002/681/773/non_2x/people-together-portrait-men-and-women-characters-male-and-female-cartoon-vector.jpg', // Replace with your image URL
-                  ),
+                  image: AssetImage('images/signup.gif'),
                   fit: BoxFit.cover,
                 ),
                 borderRadius: BorderRadius.only(
@@ -74,126 +103,148 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
 
           // Page Content
-          SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(20, 120, 20, 0),
-              child: Column(
-                children: <Widget>[
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  reusableTextField(
-                    "Enter Username",
-                    Icons.person_outline,
-                    false,
-                    _userNameTextController,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  reusableTextField(
-                    "Enter Your Email",
-                    Icons.person_outline,
-                    false,
-                    _emailTextController,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  reusableTextField(
-                    "Enter Password",
-                    Icons.lock_outlined,
-                    true,
-                    _passwordTextController,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  reusableTextField(
-                    "Enter Phone Number",
-                    Icons.phone,
-                    false,
-                    _phoneNumberController,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  firebaseUIButton(context, "Register", () async {
-                    setState(() {
-                      _errorText = null;
-                    });
-
-                    final email = _emailTextController.text;
-                    final password = _passwordTextController.text;
-                    final phoneNumber = _phoneNumberController.text;
-
-                    if (email.isEmpty || password.isEmpty || phoneNumber.isEmpty) {
-                      setState(() {
-                        _errorText = "Please fill in all fields";
-                      });
-                      return;
-                    }
-
-                    if (!isValidPhoneNumber(phoneNumber)) {
-                      setState(() {
-                        _errorText = "Invalid phone number format";
-                      });
-                      return;
-                    }
-
-                    try {
-                      final userCredential = await FirebaseAuth.instance
-                          .createUserWithEmailAndPassword(
-                        email: email,
-                        password: password,
-                      ).then((value) {
-                        FirebaseFirestore.instance.collection('UserData').doc(value.user?.uid).set(
-                            {
-                              "email": value.user?.email,
-                              "phone_no": phoneNumber,
-                              "username": _userNameTextController.text
-                            });
-                      });
-
-                      if (userCredential.user == null) {
-                        setState(() {
-                          _errorText = "Account creation failed";
-                        });
-                      } else {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SignInScreen(),
+          FadeTransition(
+            opacity: _fadeAnimation,
+            child: Center(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 120, 20, 0),
+                  child: Column(
+                    children: <Widget>[
+                      SlideTransition(
+                        position: _slideAnimation,
+                        child: Text(
+                          "Hola Amigos!",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
                           ),
-                        );
-                      }
-                    } on FirebaseAuthException catch (e) {
-                      if (e.code == 'email-already-in-use') {
-                        setState(() {
-                          _errorText = "This email is already in use";
-                        });
-                      } else {
-                        setState(() {
-                          _errorText = e.message;
-                        });
-                      }
-                    } catch (e) {
-                      print("Error: $e");
-                    }
-                  }),
-                  if (_errorText != null)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: Text(
-                        _errorText!,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
                         ),
                       ),
-                    ),
-                ],
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      reusableTextField(
+                        "Enter Username",
+                        Icons.person_outline,
+                        false,
+                        _userNameTextController,
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      reusableTextField(
+                        "Enter Your Email",
+                        Icons.person_outline,
+                        false,
+                        _emailTextController,
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      reusableTextField(
+                        "Enter Password",
+                        Icons.lock_outlined,
+                        true,
+                        _passwordTextController,
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      reusableTextField(
+                        "Enter Phone Number",
+                        Icons.phone,
+                        false,
+                        _phoneNumberController,
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      firebaseUIButton(context, "Register", () async {
+                        setState(() {
+                          _errorText = null;
+                        });
+
+                        final email = _emailTextController.text;
+                        final password = _passwordTextController.text;
+                        final phoneNumber = _phoneNumberController.text;
+
+                        if (email.isEmpty ||
+                            password.isEmpty ||
+                            phoneNumber.isEmpty) {
+                          setState(() {
+                            _errorText = "Please fill in all fields";
+                          });
+                          return;
+                        }
+
+                        if (!isValidPhoneNumber(phoneNumber)) {
+                          setState(() {
+                            _errorText = "Invalid phone number format";
+                          });
+                          return;
+                        }
+
+                        try {
+                          final userCredential = await FirebaseAuth.instance
+                              .createUserWithEmailAndPassword(
+                            email: email,
+                            password: password,
+                          ).then((value) {
+                            FirebaseFirestore.instance
+                                .collection('UserData')
+                                .doc(value.user?.uid)
+                                .set(
+                              {
+                                "email": value.user?.email,
+                                "phone_no": phoneNumber,
+                                "username": _userNameTextController.text
+                              },
+                            );
+                          });
+
+                          if (userCredential.user == null) {
+                            setState(() {
+                              _errorText = "Account creation failed";
+                            });
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SignInScreen(),
+                              ),
+                            );
+                          }
+                        } on FirebaseAuthException catch (e) {
+                          if (e.code == 'email-already-in-use') {
+                            setState(() {
+                              _errorText = "This email is already in use";
+                            });
+                          } else {
+                            setState(() {
+                              _errorText = e.message;
+                            });
+                          }
+                        } catch (e) {
+                          print("Error: $e");
+                        }
+                      }),
+                      if (_errorText != null)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          child: Text(
+                            _errorText!,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),

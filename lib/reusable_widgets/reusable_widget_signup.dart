@@ -10,6 +10,8 @@ Image logoWidget(String imageName) {
   );
 }
 
+
+
 TextField reusableTextField(String text, IconData icon, bool isPasswordType,
     TextEditingController controller) {
   return TextField(
@@ -17,21 +19,22 @@ TextField reusableTextField(String text, IconData icon, bool isPasswordType,
     obscureText: isPasswordType,
     enableSuggestions: !isPasswordType,
     autocorrect: !isPasswordType,
-    cursorColor: Colors.white,
-    style: TextStyle(color: Colors.white.withOpacity(0.9)),
+    cursorColor: Colors.black,
+    style: TextStyle(color: Colors.black), // Set text color to black
     decoration: InputDecoration(
       prefixIcon: Icon(
         icon,
-        color: Colors.white70,
+        color: Colors.black, // Set icon color to black
       ),
       labelText: text,
-      labelStyle: TextStyle(color: Colors.white.withOpacity(0.9)),
+      labelStyle: TextStyle(color: Colors.black), // Set label color to black
       filled: true,
       floatingLabelBehavior: FloatingLabelBehavior.never,
       fillColor: Colors.white.withOpacity(0.3),
       border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30.0),
-          borderSide: const BorderSide(width: 0, style: BorderStyle.none)),
+        borderRadius: BorderRadius.circular(30.0),
+        borderSide: const BorderSide(width: 0, style: BorderStyle.none),
+      ),
     ),
     keyboardType: isPasswordType
         ? TextInputType.visiblePassword

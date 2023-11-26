@@ -43,7 +43,7 @@ class PlankPoseScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 10),
                   Text(
-                    'The Butterfly Pose, also known as Baddha Konasana, is a yoga posture that provides various physical and mental benefits. Here are some key points about this pose:',
+                    'The plank pose is a yoga pose thats similar to the top of a push-up.',
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.white,
@@ -55,13 +55,11 @@ class PlankPoseScreen extends StatelessWidget {
                     // Fixed height for the bullet points
                     child: ListView(
                       children: [
-                        bulletPoint('Sit with your legs bent at the knees and your feet.'),
-                        bulletPoint('Hold your feet with your hands.'),
-                        bulletPoint('Improves flexibility in the inner thighs and groins.'),
-                        bulletPoint('Stimulates the abdominal organs and helps digestion.'),
-                        bulletPoint('Calms the mind and reduces stress and fatigue.'),
-                        bulletPoint('Enhances blood circulation in the pelvis.'),
-                        bulletPoint('It\'s a great pose for meditation and relaxation.'),
+                        bulletPoint('Start on all fours.'),
+                        bulletPoint('Tuck your toes.'),
+                        bulletPoint('Lift your knees to extend your legs.'),
+                        bulletPoint('Place your hands under your shoulders.'),
+                        bulletPoint('CKeep your body in a straight line.'),
                       ],
                     ),
                   ),

@@ -174,6 +174,18 @@ class _SlidingButtonState extends State<SlidingButton> {
               MaterialPageRoute(builder: (context) => MusicPlayer()), // Navigate to the Love screen
             );
           }
+          if (widget.text == 'Dissapointed') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MusicPlayer()), // Navigate to the Love screen
+            );
+          }
+          if (widget.text == 'Helpless') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MusicPlayer()), // Navigate to the Love screen
+            );
+          }
         },
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(buttonColor),

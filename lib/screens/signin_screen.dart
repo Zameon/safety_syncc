@@ -1,5 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:safety_syncc/screens/reset_password.dart';
 import 'package:safety_syncc/screens/signup_screen.dart';
 import 'package:flutter/animation.dart';
@@ -77,9 +77,7 @@ class _SignInScreenState extends State<SignInScreen>
               height: 260,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage(
-                    'images/meditation.gif'
-                  ),
+                  image: AssetImage('images/login.gif'),
                   fit: BoxFit.cover,
                 ),
                 borderRadius: BorderRadius.only(
@@ -104,7 +102,10 @@ class _SignInScreenState extends State<SignInScreen>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         SlideTransition(
-                          position: _slideAnimation,
+                          position: Tween<Offset>(
+                            begin: Offset(0,0),
+                            end: Offset(0,0),
+                          ).animate(_animationController),
                           child: Text(
                             "Hola Amigos!",
                             style: TextStyle(
@@ -122,6 +123,7 @@ class _SignInScreenState extends State<SignInScreen>
                           Icons.person_outline,
                           false,
                           _emailTextController,
+
                         ),
                         const SizedBox(
                           height: 20,
@@ -131,6 +133,7 @@ class _SignInScreenState extends State<SignInScreen>
                           Icons.lock_outline,
                           true,
                           _passwordTextController,
+
                         ),
                         const SizedBox(
                           height: 10,
@@ -270,30 +273,5 @@ class _SignInScreenState extends State<SignInScreen>
         ),
       ),
     );
-  }
-}
-
-class SemiCirclePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    Paint paint = Paint()
-      ..color = Colors.black
-      ..style = PaintingStyle.fill;
-
-    canvas.drawArc(
-      Rect.fromPoints(
-        Offset(0, 0),
-        Offset(size.width, size.height),
-      ),
-      0,
-      -6.8, // -pi radians draws a semi-circle
-      true,
-      paint,
-    );
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
   }
 }
