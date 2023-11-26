@@ -225,17 +225,33 @@ class _FriendSearchScreenState extends State<FriendSearchScreen> {
                         if (userFriends[friendName] == true) {
                           return Container();
                         } else {
-                          return ListTile(
+                          return Card(
+                              child: ListTile(
                             title: Text(friendName),
-                            trailing: IconButton(
+                            /*trailing: IconButton(
                               icon: Icon(Icons.add),
                               onPressed: () {
                                 print(inputData() + " in friend requests");
                                 _sendFriendRequest(friendName);
                                 showFriendRequestSentDialog(context);
                               },
+                            )*/
+                                trailing: FloatingActionButton.extended(
+                              label: Text('Add'), // <-- Text
+
+                            backgroundColor: Colors.green,
+                            icon: Icon( // <-- Icon
+                              Icons.add,
+                              size: 24.0,
                             ),
-                          );
+                            onPressed: () {
+                              print(inputData() + " in friend requests");
+                              _sendFriendRequest(friendName);
+                              showFriendRequestSentDialog(context);
+                            },
+                          ),
+                          )
+                        );
                         }
                       },
                     );

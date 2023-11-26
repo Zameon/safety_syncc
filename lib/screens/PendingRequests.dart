@@ -108,16 +108,35 @@ class _PendingRequestsScreenState extends State<PendingRequests> {
                   itemCount: users.length,
                   itemBuilder: (context, index) {
                     String friendName = users[index]['receiver'];
-                    return ListTile(
+                    return Card(
+                        child: ListTile(
+                      hoverColor: Colors.white54,
+                      focusColor: Colors.purple.shade300,
+                      tileColor: Colors.white10,
                       title: Text(friendName),
-                      trailing: IconButton(
+                      /*trailing: IconButton(
                         icon: Icon(Icons.cancel, color: Colors.red),
                         onPressed: () {
                           print(getUser() + "in friend requests");
                          _deleteFriendRequest(friendName);
                          showRequestDeleted(context);
                         },
-                      ),
+                      ),*/
+                          trailing: FloatingActionButton.extended(
+                            label: Text('Cancel'), // <-- Text
+
+                            backgroundColor: Colors.red,
+                            icon: Icon( // <-- Icon
+                              Icons.cancel,
+                              size: 24.0,
+                            ),
+                            onPressed: () {
+                              print(getUser() + "in friend requests");
+                              _deleteFriendRequest(friendName);
+                              showRequestDeleted(context);
+                            },
+                          ),
+                    )
                     );
                   },
                 );

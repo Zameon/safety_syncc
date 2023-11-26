@@ -8,8 +8,8 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 class FriendList extends StatefulWidget {
   @override
   _FriendListScreenState createState() => _FriendListScreenState();
-
 }
+
 String curr_username = "";
 
 class _FriendListScreenState extends State<FriendList> {
@@ -21,14 +21,14 @@ class _FriendListScreenState extends State<FriendList> {
   Map<String, dynamic> share = {};
   Map<String, String> frnMails = {};
 
-
-
   String getUser() {
     final User? user = auth.currentUser;
     print(user?.uid);
     print("atkaye gese?");
+
     ///for getting the username
-    FirebaseFirestore.instance.collection('UserData')
+    FirebaseFirestore.instance
+        .collection('UserData')
         .where("email", isGreaterThanOrEqualTo: user?.email)
         .get()
         .then((querySnapshot) {
@@ -37,18 +37,14 @@ class _FriendListScreenState extends State<FriendList> {
       searchResultsList = searchResults;
       curr_username = searchResultsList[0]["username"];
       print(curr_username + "ekhane takao please");
-
     }).catchError((error) {
-
       print("Error searching for friends: $error");
     });
 
     return curr_username;
-
   }
 
-  void getemail(String name)
-  {
+  void getemail(String name) {
     Map<String, dynamic> res = {};
     FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -57,16 +53,14 @@ class _FriendListScreenState extends State<FriendList> {
         .where("username", isEqualTo: name)
         .get()
         .then((value) {
-        setState(() {
-          share = value.docs[0].data();
-          frnMails[name] = share["email"];
-          //print(mail);
-        });
-
+      setState(() {
+        share = value.docs[0].data();
+        frnMails[name] = share["email"];
+        //print(mail);
+      });
 
       //print(res);
     });
-
   }
 
   void updateData(bool val, String friendName) {
@@ -82,21 +76,17 @@ class _FriendListScreenState extends State<FriendList> {
         FirebaseFirestore.instance
             .collection('friends')
             .doc(ds.reference.id)
-            .update({'sharelocation': !val})
-            .then((value) {
+            .update({'sharelocation': !val}).then((value) {
           print("Value updated successfully.");
-        })
-            .catchError((error) {
+        }).catchError((error) {
           print("Error updating value: $error");
         });
       }
 
       print("Document id found.");
-    })
-        .catchError((error) {
+    }).catchError((error) {
       print("Error finding documents: $error");
     });
-
   }
 
   String getChatRoomId(String a, String b) {
@@ -110,7 +100,7 @@ class _FriendListScreenState extends State<FriendList> {
   void _populateUsermap(String friendname) {
     FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-     _firestore
+    _firestore
         .collection('friends')
         .where("friend", isEqualTo: friendname)
         .where("user", isEqualTo: getUser())
@@ -169,7 +159,8 @@ class _FriendListScreenState extends State<FriendList> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Stopped sharing your location'),
-          content: Text('You are no longer sharing location with ' + friendname + '.'),
+          content: Text(
+              'You are no longer sharing location with ' + friendname + '.'),
           actions: <Widget>[
             TextButton(
               child: Text('OK'),
@@ -189,36 +180,33 @@ class _FriendListScreenState extends State<FriendList> {
     FirebaseFirestore.instance
         .collection('friends') // Replace with your collection name
         .where('friend', isEqualTo: friendName)
-        .where('user', isEqualTo: getUser())// Replace with your field and value
+        .where('user',
+            isEqualTo: getUser()) // Replace with your field and value
         .get()
         .then((snapshot) {
       for (DocumentSnapshot ds in snapshot.docs) {
         ds.reference.delete();
       }
       print("Documents with specified condition deleted successfully.");
-    })
-        .catchError((error) {
+    }).catchError((error) {
       print("Error deleting documents: $error");
     });
 
     FirebaseFirestore.instance
         .collection('friends') // Replace with your collection name
         .where('user', isEqualTo: friendName)
-        .where('friend', isEqualTo: getUser())// Replace with your field and value
+        .where('friend',
+            isEqualTo: getUser()) // Replace with your field and value
         .get()
         .then((snapshot) {
       for (DocumentSnapshot ds in snapshot.docs) {
         ds.reference.delete();
       }
       print("Documents with specified condition deleted successfully.");
-    })
-        .catchError((error) {
+    }).catchError((error) {
       print("Error deleting documents: $error");
     });
-
-
   }
-
 
   List<QueryDocumentSnapshot> searchResultsList = [];
   bool isSharingON = false;
@@ -234,8 +222,10 @@ class _FriendListScreenState extends State<FriendList> {
             Text('Besties'),
             StreamBuilder<QuerySnapshot>(
               //stream: _firestore.collection('UsersData').snapshots(),
-              stream: FirebaseFirestore.instance.collection('friends')
-                  .where("user", isEqualTo: getUser()).snapshots(),
+              stream: FirebaseFirestore.instance
+                  .collection('friends')
+                  .where("user", isEqualTo: getUser())
+                  .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return CircularProgressIndicator();
@@ -251,80 +241,92 @@ class _FriendListScreenState extends State<FriendList> {
                     //print(mail);
 
                     return Slidable(
-                        startActionPane: ActionPane(
-                          motion: const DrawerMotion(),
-                          children: [
-                            SlidableAction(
-                              onPressed: (context) {
-                                Navigator.push(context, MaterialPageRoute(
-                                    builder: (context) => LocationScreen()));
-                                print('Delete item $index');
-                              },
-                              backgroundColor: Colors.blue,
-                              icon: Icons.my_location_sharp,
-                              label: 'Track',
-                            ),
-                            SlidableAction(
-                              onPressed: (context) {
-                                _populateUsermap(friendName);
-                                print("before going into chatroom: ");
-                                print(userMap);
-                                print(getChatRoomId(getUser(), friendName));
-                                // Implement delete functionality
-                                Navigator.push(context, MaterialPageRoute(
-                                    builder: (context) => ChatRoom(chatRoomId: getChatRoomId(getUser(), friendName), userMap: userMap)));
-                                print('Send text to $index');
-                              },
-                              backgroundColor: Colors.blueGrey,
-                              icon: Icons.message,
-                              label: 'Text',
-                            ),
-                          ],
-                        ),
-                        endActionPane: ActionPane(
-                          motion: const DrawerMotion(),
-                          children: [
-                            SlidableAction(
-                              onPressed: (context) {
-                                _deleteFriend(friendName);
-                                showRequestDeleted(context, friendName);
-                              },
-                              backgroundColor: Colors.red,
-                              icon: Icons.delete,
-                              label: 'Remove',
-                            ),
-                          ],
-                        ),
-
-
-                        child: ListTile(
-                          hoverColor: Colors.white54,
-                          focusColor: Colors.purple.shade300,
-
-                          title: Text(friendName),
-                          subtitle: Text(frnMails[friendName]!),
-                          enabled: true,
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: Icon(sharing ? Icons.location_on:Icons.location_off),
-                                onPressed: () {
-                                  print(sharing);
-                                  print(" with " + friendName);
-                                  // Implement edit functionality
-                                  updateData(users[index]['sharelocation'], friendName);
-
-                                  print('Edit item $index');
-                                },
-                              ),
-
-                            ],
+                      startActionPane: ActionPane(
+                        motion: const DrawerMotion(),
+                        children: [
+                          SlidableAction(
+                            onPressed: (context) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LocationScreen()));
+                              print('Delete item $index');
+                            },
+                            backgroundColor: Colors.blue,
+                            icon: Icons.my_location_sharp,
+                            label: 'Track',
                           ),
+                          SlidableAction(
+                            onPressed: (context) {
+                              _populateUsermap(friendName);
+                              print("before going into chatroom: ");
+                              print(userMap);
+                              print(getChatRoomId(getUser(), friendName));
+                              // Implement delete functionality
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ChatRoom(
+                                          chatRoomId: getChatRoomId(
+                                              getUser(), friendName),
+                                          userMap: userMap)));
+                              print('Send text to $index');
+                            },
+                            backgroundColor: Colors.blueGrey,
+                            icon: Icons.message,
+                            label: 'Text',
+                          ),
+                        ],
+                      ),
+                      endActionPane: ActionPane(
+                        motion: const DrawerMotion(),
+                        children: [
+                          SlidableAction(
+                            onPressed: (context) {
+                              _deleteFriend(friendName);
+                              showRequestDeleted(context, friendName);
+                            },
+                            backgroundColor: Colors.red,
+                            icon: Icons.delete,
+                            label: 'Remove',
+                          ),
+                        ],
+                      ),
+                      child: Card(
+                        elevation: 16,
+                        shadowColor: Colors.white54,
+                          child: ListTile(
+                                hoverColor: Colors.white54,
+                                focusColor: Colors.purple.shade300,
+                                tileColor: Colors.white10,
+                                title: Text(friendName),
+                                subtitle: Text(frnMails[friendName]!),
+                                enabled: true,
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                            IconButton(
+                              icon: Icon(sharing
+                                  ? Icons.location_on
+                                  : Icons.location_off),
+                              onPressed: () {
+                                print(sharing);
+                                print(" with " + friendName);
+                                // Implement edit functionality
+                                updateData(
+                                    users[index]['sharelocation'], friendName);
 
+                                print('Edit item $index');
+                              },
+                            ),
+                          ],
                         ),
-                        );
-
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 8,
+                          horizontal: 16,
+                        ),
+                      )),
+                    );
                   },
                 );
               },
@@ -335,4 +337,3 @@ class _FriendListScreenState extends State<FriendList> {
     );
   }
 }
-

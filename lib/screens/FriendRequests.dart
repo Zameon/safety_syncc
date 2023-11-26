@@ -118,16 +118,37 @@ class _FriendRequestsScreenState extends State<FriendRequests> {
                   itemCount: users.length,
                   itemBuilder: (context, index) {
                     String friendName = users[index]['sender'];
-                    return ListTile(
+                    return Card(
+                        child: ListTile(
                       title: Text(friendName),
-                      trailing: IconButton(
+                      /*trailing: IconButton(
                         icon: Icon(Icons.mobile_friendly, color: Colors.green),
                         onPressed: () {
                           print(getUser() + "in friend requests");
                           _acceptFriendRequest(friendName);
                           showFriendRequestAcceptedDialog(context);
                         },
+
+                      ),*/
+                          trailing: FloatingActionButton.extended(
+                            label: Text('Accept'), // <-- Text
+
+                            backgroundColor: Colors.green,
+                            icon: Icon( // <-- Icon
+                              Icons.mobile_friendly,
+                              size: 24.0,
+                            ),
+                            onPressed: () {
+                              print(getUser() + "in friend requests");
+                              _acceptFriendRequest(friendName);
+                              showFriendRequestAcceptedDialog(context);
+                            },
+                          ),
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 8,
+                        horizontal: 16,
                       ),
+                    )
                     );
                   },
                 );
