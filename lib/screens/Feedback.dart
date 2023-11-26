@@ -125,7 +125,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
             ),
             SizedBox(height: 20),
             StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance.collection('FeedBack').snapshots(),
+                stream: FirebaseFirestore.instance.collection('FeedBack').orderBy('timestamp').snapshots(),
                 builder: (context, snapshot) {
                   List<Row> clientWidgets = [];
                   if(snapshot.hasData)

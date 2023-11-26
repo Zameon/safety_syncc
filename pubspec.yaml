@@ -45,6 +45,8 @@ dependencies:
   cloud_firestore: ^4.9.1
   firebase_auth: ^4.9.0
   firebase_storage: ^11.2.6
+  image_picker: ^0.8.3+2
+  flutter_slidable: ^3.0.1
 
 dev_dependencies:
   flutter_test:

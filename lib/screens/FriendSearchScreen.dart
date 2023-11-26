@@ -16,6 +16,9 @@ class _FriendSearchScreenState extends State<FriendSearchScreen> {
   late String? curr_name;
   late Map<String, bool> userFriends = {};
 
+  late final Map<String, dynamic> userMap;
+  late final String chatRoomId;
+
   Future<void> getSentPeople() async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('friend_requests')
@@ -128,6 +131,7 @@ class _FriendSearchScreenState extends State<FriendSearchScreen> {
   void initState() {
     super.initState();
     getFriends();
+    ErrorWidget.builder = (FlutterErrorDetails details) => Container();
     // location.changeSettings(interval: 300, accuracy: loc.LocationAccuracy.high);
     // location.enableBackgroundMode(enable: true);
   }
@@ -151,7 +155,22 @@ class _FriendSearchScreenState extends State<FriendSearchScreen> {
     }).catchError((error) {
       print("Error searching for friends: $error");
     });
+
+     _firestore
+        .collection('UserData')
+        .where("username", isEqualTo: query)
+        .get()
+        .then((value) {
+      setState(() {
+        userMap = value.docs[0].data();
+      });
+      print("This is new :");
+      print(userMap);
+    });
+
+
   }
+
 
   @override
   Widget build(BuildContext context) {

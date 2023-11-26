@@ -17,6 +17,10 @@ class _MyMapState extends State<MyMap> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          title: Text('Live Location'),
+        ),
         body: StreamBuilder(
       stream: FirebaseFirestore.instance.collection('location').snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
