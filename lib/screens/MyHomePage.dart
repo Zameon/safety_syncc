@@ -4,6 +4,7 @@ import 'package:safety_syncc/screens/About.dart';
 import 'package:safety_syncc/screens/Feedback.dart';
 import 'package:safety_syncc/screens/MoodSelectionPage.dart';
 import 'package:safety_syncc/screens/SDmain.dart';
+import 'package:safety_syncc/screens/chatRoom.dart';
 import 'package:safety_syncc/screens/community.dart';
 import 'package:safety_syncc/screens/navbar.dart';
 

@@ -7,6 +7,7 @@ import 'package:safety_syncc/screens/MoodSelectionPage.dart';
 import 'package:safety_syncc/screens/SDmain.dart';
 import 'package:safety_syncc/screens/community.dart';
 import 'package:safety_syncc/screens/signin_screen.dart';
+import 'package:safety_syncc/screens/chatRoom.dart';
 
 import 'location.dart';
 
@@ -59,6 +60,12 @@ class _NavbarState extends State<Navbar> {
               title: Text('Community'),
               onTap: () => Navigator.push(context, MaterialPageRoute(
                   builder: (context) => Community()))
+          ),
+          ListTile(
+              leading: Icon(Icons.chat),
+              title: Text('Chat')
+              /*onTap: () => Navigator.push(context, MaterialPageRoute(
+                  builder: (context) => chatRoom())*/
           ),
           ListTile(
               leading: Icon(Icons.safety_check),

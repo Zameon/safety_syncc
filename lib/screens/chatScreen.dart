@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 import 'package:safety_syncc/screens/mymap.dart';
+import 'package:safety_syncc/screens/dateformatting.dart';
 
 class ChatRoom extends StatelessWidget {
   Map<String, dynamic> userMap;
@@ -15,21 +17,25 @@ class ChatRoom extends StatelessWidget {
 
   ChatRoom({required this.chatRoomId, required this.userMap});
 
-
   final TextEditingController _message = TextEditingController();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   File? imageFile;
+  bool isFirstMessage = false;
+  Map<String, dynamic> chatData = {};
 
   String getUsersData() {
-       _firestore.collection('UserData').doc(_auth.currentUser!.uid).get().then((value) {
-        name =  value['username'];
+    _firestore
+        .collection('UserData')
+        .doc(_auth.currentUser!.uid)
+        .get()
+        .then((value) {
+      name = value['username'];
     });
 
-       return name;
+    return name;
   }
-
 
   /*Future getImage() async {
     ImagePicker _picker = ImagePicker();
@@ -86,8 +92,7 @@ class ChatRoom extends StatelessWidget {
     }
   }*/
 
-  String getuid(String fname)
-  {
+  String getuid(String fname) {
     QuerySnapshot querySnapshot = FirebaseFirestore.instance
         .collection('UserData')
         .where('username', isEqualTo: fname)
@@ -105,18 +110,96 @@ class ChatRoom extends StatelessWidget {
     }
   }
 
-  void onSendMessage() async {
+  void onSendMessage()  {
+
+    final docRef = _firestore.collection('Chatroom').doc(chatRoomId);
+    docRef.get().then(
+          (DocumentSnapshot doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        print("Inside");
+
+        chatData = data;
+        print(chatData);
+      },
+      onError: (e) => print("Error getting document: $e"),
+    );
+    print("Outside");
+    print(chatData);
+
     if (_message.text.isNotEmpty) {
       Map<String, dynamic> messages = {
-        "sendby": getUsersData(),
+        "sendby": userMap['user'],
         "message": _message.text,
         "type": "text",
         "time": FieldValue.serverTimestamp(),
       };
 
+      print("choltese?");
+
+      if(isFirstMessage == true)
+        {
+          print("prothombar");
+          Map<String, dynamic> newEntry = {
+            "from_user": userMap['user'],
+            "to_user": userMap['friend'],
+            "from_num": 1,
+            "to_num": 0,
+            "last_message": _message.text,
+            "last_time": FieldValue.serverTimestamp(),
+            "last_sendby": userMap['user']
+          };
+
+           _firestore
+          .collection('Chatroom')
+          .doc(chatRoomId)
+          .set(newEntry, SetOptions(merge: true));
+          isFirstMessage = false;
+        }
+      else
+        {
+          print("puran manush");
+          print(chatData);
+          if(chatData['from_user'] == userMap['user'])
+            {
+              Map<String, dynamic> Entry = {
+                "from_user": chatData['from_user'],
+                "to_user": chatData['to_user'],
+                "from_num": chatData['from_num']+1,
+                "to_num": chatData['to_num'],
+                "last_message": _message.text,
+                "last_time": FieldValue.serverTimestamp(),
+                "last_sendby": userMap['user']
+              };
+
+               _firestore
+                  .collection('Chatroom')
+                  .doc(chatRoomId)
+                  .set(Entry, SetOptions(merge: true));
+            }
+          else
+            {
+              Map<String, dynamic> Entry2 = {
+                "from_user": chatData['from_user'],
+                "to_user": chatData['to_user'],
+                "from_num": chatData['from_num']+1,
+                "to_num": chatData['to_num']+1,
+                "last_message": _message.text,
+                "last_time": FieldValue.serverTimestamp(),
+                "last_sendby": userMap['user']
+              };
+
+               _firestore
+                  .collection('Chatroom')
+                  .doc(chatRoomId)
+                  .set(Entry2, SetOptions(merge: true));
+            }
+        }
+
+      print("maybe");
+
       _message.clear();
-      await _firestore
-          .collection('chatroom')
+       _firestore
+          .collection('Chatroom')
           .doc(chatRoomId)
           .collection('chats')
           .add(messages);
@@ -125,6 +208,7 @@ class ChatRoom extends StatelessWidget {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -132,12 +216,14 @@ class ChatRoom extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: StreamBuilder<DocumentSnapshot>(
-          stream:
-          _firestore.collection("UserData").doc(_auth.currentUser!.uid).snapshots(),
+          stream: _firestore
+              .collection("UserData")
+              .doc(_auth.currentUser!.uid)
+              .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.data != null) {
-
               return Container(
+                color: Colors.purple.shade300,
                 child: Column(
                   children: [
                     Text(userMap['friend']),
@@ -163,7 +249,7 @@ class ChatRoom extends StatelessWidget {
               width: size.width,
               child: StreamBuilder<QuerySnapshot>(
                 stream: _firestore
-                    .collection('chatroom')
+                    .collection('Chatroom')
                     .doc(chatRoomId)
                     .collection('chats')
                     .orderBy("time", descending: false)
@@ -171,16 +257,28 @@ class ChatRoom extends StatelessWidget {
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.data != null) {
+                    print(" list make");
+                    if(isFirstMessage != true) isFirstMessage = false;
                     return ListView.builder(
                       itemCount: snapshot.data!.docs.length,
                       itemBuilder: (context, index) {
                         Map<String, dynamic> map = snapshot.data!.docs[index]
                             .data() as Map<String, dynamic>;
+                        print(map);
+                        print("ekhane ashe prothombare keno");
                         return messages(size, map, context);
                       },
                     );
                   } else {
-                    return Container();
+                    print("prothombar ");
+                    print(isFirstMessage);
+                    print("thik korar por");
+
+                    isFirstMessage = true;
+                    print(isFirstMessage);
+                    return Container(
+
+                    );
                   }
                 },
               ),
@@ -196,34 +294,39 @@ class ChatRoom extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      height: size.height / 17,
-                      width: size.width / 1.3,
-                      child: TextField(
+                      //height: size.height / 17,
+                      //width: size.width / 1.7,
+                      child: Expanded(
+                          child: TextField(
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
                         controller: _message,
                         decoration: InputDecoration(
                             //suffixIcon: IconButton(
-                              //onPressed: () => getImage(),
-                              //icon: Icon(Icons.photo),
+                            //onPressed: () => getImage(),
+                            //icon: Icon(Icons.photo),
                             //),
                             hintText: "Send Message",
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
                             )),
+                      )),
+                    ),
+                    Row(mainAxisSize: MainAxisSize.min, children: [
+                      IconButton(
+                          icon: Icon(Icons.send), onPressed: onSendMessage),
+                      IconButton(
+                        icon: Icon(Icons.directions),
+                        onPressed: () {
+                          print("we get the uid as: ");
+                          print(getuid(userMap['friend']));
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>
+                                MyMap(getuid(userMap['friend'])),
+                          ));
+                        },
                       ),
-                    ),
-                    IconButton(
-                        icon: Icon(Icons.send), onPressed: onSendMessage),
-                    IconButton(
-                      icon: Icon(Icons.directions),
-                      onPressed: () {
-                        print(getuid(userMap['friend']));
-                        // Navigator.of(context).push(MaterialPageRoute(
-                        //builder: (context) =>
-
-                        //MyMap(getuid(userMap['friend'])),
-                        // ));
-                      },
-                    ),
+                    ]),
                   ],
                 ),
               ),
@@ -236,36 +339,85 @@ class ChatRoom extends StatelessWidget {
 
   Widget messages(Size size, Map<String, dynamic> map, BuildContext context) {
     return map['type'] == "text"
-        ? Container(
-      width: size.width,
-      alignment: map['sendby'] == getUsersData()
-          ? Alignment.centerRight
-          : Alignment.centerLeft,
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 14),
-        margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: map['sendby'] == getUsersData()? Colors.purple : Colors.white,
-        ),
-        child: Text(
-          map['message'],
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            color: map['sendby'] == getUsersData()? Colors.white : Colors.black,
+        ?
+           Column(
+               //crossAxisAlignment: CrossAxisAlignment.start,
+               mainAxisSize: MainAxisSize.min,
+             children: [
+             Flexible(
+                child: Container(
+              width: size.width,
+              alignment: map['sendby'] == getUsersData()
+                  ? Alignment.centerRight
+                  : Alignment.centerLeft,
+                  child: Container(
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 14),
+                margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                decoration: BoxDecoration(
+                  border: map['sendby'] == getUsersData()
+                      ? Border.all(color: Colors.white)
+                      : Border.all(color: Colors.purple),
+                  borderRadius: map['sendby'] == getUsersData()
+                      ? BorderRadius.only(
+                          topLeft: Radius.circular(30),
+                          topRight: Radius.circular(30),
+                          bottomLeft: Radius.circular(30))
+                      : BorderRadius.only(
+                          topLeft: Radius.circular(30),
+                          topRight: Radius.circular(30),
+                          bottomRight: Radius.circular(30)),
+                  color: map['sendby'] == getUsersData()
+                      ? Colors.purple
+                      : Colors.white,
+                ),
+                child: Text(
+                  map['message'],
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: map['sendby'] == getUsersData()
+                        ? Colors.white
+                        : Colors.black,
+                  ),
+                ),
+              ),
+            )
           ),
-        ),
-      ),
-    )
+    /*Padding(
+
+    padding: EdgeInsets.only(right: MediaQuery.of(context).size.width * .04),
+    child: Text("time sent",
+    style: const TextStyle(fontSize: 13, color: Colors.black54),
+      textAlign: TextAlign.left,
+    ),
+    ),*/
+               Container(
+                 width: size.width,
+                 alignment: map['sendby'] == getUsersData()
+                     ? Alignment.centerRight
+                     : Alignment.centerLeft,
+                 child: Container(
+                   padding: EdgeInsets.symmetric(vertical: 5, horizontal: 14),
+                   margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                   child: Text(
+                     MyDateUtil.getMessageTime(context: context, time: map['time'].toDate().millisecondsSinceEpoch.toString()),
+                     style: TextStyle(
+                       fontSize: 13,
+                       fontWeight: FontWeight.w500,
+                       color: Colors.black,
+                     ),
+                   ),
+                 ),
+               )
+           ])
         : Container(
-      height: size.height / 2.5,
-      width: size.width,
-      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-      alignment: map['sendby'] == getUsersData()
-          ? Alignment.centerRight
-          : Alignment.centerLeft,
-      /*child: InkWell(
+            height: size.height / 2.5,
+            width: size.width,
+            padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+            alignment: map['sendby'] == getUsersData()
+                ? Alignment.centerRight
+                : Alignment.centerLeft,
+            /*child: InkWell(
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute(
             builder: (_) => ShowImage(
@@ -286,7 +438,7 @@ class ChatRoom extends StatelessWidget {
               : CircularProgressIndicator(),
         ),
       ),*/
-    );
+          );
   }
 }
 
